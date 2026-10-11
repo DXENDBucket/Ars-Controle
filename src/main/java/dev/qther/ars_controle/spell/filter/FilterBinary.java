@@ -143,17 +143,17 @@ public class FilterBinary extends AbstractFilter implements IAdaptiveFilter {
                     .setAugments(firstAugments)
                     .addItemsFromEntity(caster)
                     .build(rfst, newRes.hitResult, caster.level(), caster, newCtx);
-            rfst.chance = FilterRandom.calculateChance(stats.getAmpMultiplier());
+            afst = new FilterRandom.Operand(FilterRandom.calculateChance(stats.getAmpMultiplier()));
         }
         if (snd instanceof FilterRandom rsnd) {
-            var augments = spell.getAugments(idx, caster);
+            var augments = spell.getAugments(idx + skip, caster);
             var newCtx = res.spellContext.makeChildContext();
             var newRes = res.getNewResolver(newCtx);
             var stats = new SpellStats.Builder()
                     .setAugments(augments)
                     .addItemsFromEntity(caster)
                     .build(rsnd, newRes.hitResult, caster.level(), caster, newCtx);
-            rsnd.chance = FilterRandom.calculateChance(stats.getAmpMultiplier());
+            asnd = new FilterRandom.Operand(FilterRandom.calculateChance(stats.getAmpMultiplier()));
         }
 
         return Pair.of(skip + 1, Pair.of(afst, asnd));

@@ -70,6 +70,20 @@ public class FilterRandom extends AbstractFilter {
         return ThreadLocalRandom.current().nextDouble() <= this.chance;
     }
 
+    // Binary filters may contain the same registered glyph twice. Keep each
+    // occurrence's chance independent instead of mutating the shared singleton.
+    record Operand(double chance) implements IFilter {
+        @Override
+        public boolean shouldResolveOnBlock(BlockHitResult target, Level level) {
+            return ThreadLocalRandom.current().nextDouble() <= chance;
+        }
+
+        @Override
+        public boolean shouldResolveOnEntity(EntityHitResult target, Level level) {
+            return ThreadLocalRandom.current().nextDouble() <= chance;
+        }
+    }
+
     @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
